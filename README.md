@@ -1,70 +1,122 @@
-# Parking Lot Data Management System (SQL-Based Analysis)
+# Parking Lot Data Management System
 
 ## Overview
 
-This project models a parking lot management system using SQL, focusing on how vehicle categorization and structured data design can improve operational efficiency. The goal was to translate a real-world system into a relational database and explore how it can support both analysis and decision-making.
+This project models a parking lot management system using SQL, focusing on how vehicle categorization and structured data design can support operational efficiency and basic decision-making.
+
+The goal was to translate a real-world system into a relational database and use SQL queries to analyze usage patterns.
+
+---
 
 ## Problem
 
-Managing a parking lot becomes complex when multiple vehicle types (cars, buses, motorcycles, vans, etc.) are involved. Without a structured classification system, it is difficult to allocate space efficiently, track usage, or analyze demand patterns.
+Managing a parking lot becomes complex when multiple vehicle types (cars, buses, motorcycles, vans, etc.) are involved. Without proper classification, it is difficult to allocate space efficiently, track usage, or understand demand.
 
-This project addresses that gap by introducing a data-driven classification and tracking system.
+This project addresses that by introducing a structured data model for vehicle categorization and tracking.
+
+---
 
 ## Approach
 
 I designed a relational database centered around a `vehicle_category` table to:
 
-* categorize vehicles based on type
-* associate them with user groups (employees, students, visitors, contractors)
-* maintain structured records with constraints to ensure data consistency
+* Categorize vehicles based on type
+* Associate them with user groups (employees, students, visitors, contractors)
+* Maintain structured records with constraints for data consistency
 
-The system also considers relationships with parking lots, user groups, and payment logic to reflect a more realistic operational setup.
+I also explored how this model could extend to include parking duration, payment, and multi-table relationships.
 
-## Data Model & Design
+---
 
-* Primary key for unique vehicle identification
-* Unique constraint on plate numbers to avoid duplication
-* Logical grouping of vehicles by category and user group
-* Conceptual relationships:
+## Data Model
 
-  * one-to-many between parking lot and vehicles
-  * one-to-many between user groups and vehicles
-  * linkage with payment and duration for extended analysis
+The system is built around a central table:
 
-## Analysis & Queries
+### `vehicle_category`
 
-Using SQL, I explored:
+| Column Name      | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| vehicle_id       | Primary key for each record                               |
+| vehicle_category | Type of vehicle (car, bus, motorcycle, etc.)              |
+| user_group_name  | User classification (employees, students, visitors, etc.) |
+| plate_number     | Unique identifier for each vehicle                        |
+| status           | Indicates active/inactive state                           |
 
-* total vehicle count and system size
-* distribution of vehicles across categories
-* usage patterns across different user groups
-* filtering and sorting for operational monitoring
-* identification of specific vehicle groups (e.g., employees, contractors)
+### Design Highlights
 
-I also extended the logic to include:
+* Primary key ensures uniqueness
+* Unique constraint on `plate_number` prevents duplication
+* Data structured for grouping and aggregation
 
-* average vehicle distribution per user group
-* estimation of parking demand
-* conceptual revenue tracking based on duration and payment status
+### Conceptual Relationships
+
+* Parking lot → Vehicles (one-to-many)
+* User groups → Vehicles (one-to-many)
+* Extendable to payment and duration tracking
+
+---
+
+## Analysis
+
+SQL queries were used to explore system usage and patterns:
+
+* **Total Vehicles**
+
+  * Counted total records to understand system size
+
+* **Vehicle Distribution**
+
+  * Grouped by vehicle category to analyze demand
+
+* **User Group Analysis**
+
+  * Compared usage across employees, students, visitors, etc.
+
+* **Demand Estimation**
+
+  * Identified patterns across categories and user groups
+
+* **Filtering & Identification**
+
+  * Queried specific subsets (e.g., employee vehicles)
+
+* **Sorting & Pattern Matching**
+
+  * Ordered and filtered records using conditions
+
+* **Extended Logic (Conceptual)**
+
+  * Considered revenue estimation using duration and payment status
+
+---
 
 ## Key Insights
 
-* Vehicle distribution varies significantly across user groups, which can inform space allocation
-* Categorization plays a critical role in simplifying operational decisions
+* Vehicle distribution varies significantly across user groups
+* Categorization simplifies operational decision-making
 * Even a simple relational model can support both descriptive and strategic analysis
+
+---
 
 ## Limitations
 
-* Static dataset without real-time updates
-* Simplified schema (full implementation would require multiple linked tables)
-* Revenue and duration logic is conceptual rather than fully implemented
+* Static dataset (no real-time updates)
+* Simplified schema (single-table model)
+* Revenue and duration logic not fully implemented
+
+---
 
 ## Future Improvements
 
-* Extend schema to include parking duration, payments, and pricing models
-* Introduce multi-table relationships for full system design
-* Integrate real-time tracking and dashboard visualization
+* Add parking duration and payment tracking
+* Extend to multi-table relational schema
+* Integrate real-time data and dashboard visualization
 
-## Key Learning
+---
 
-This project helped me understand how operational systems can be translated into structured data models, and how SQL can be used not just for storage but for extracting insights that support decision-making.
+## Tech Stack
+
+* SQL (MySQL)
+
+
+
