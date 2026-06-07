@@ -118,5 +118,11 @@ SQL queries were used to explore system usage and patterns:
 
 * SQL (MySQL)
 
+---
+
+## Project Structure
+- schema.sql – table structure
+- data.sql – sample data
+- queries.sql – analysis queries
 
 
