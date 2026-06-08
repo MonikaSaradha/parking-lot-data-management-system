@@ -1,0 +1,192 @@
+import mysql.connector
+from mysql.connector import Error
+import tkinter as tk
+
+# Connect to the MySQL database
+try:
+    connection = mysql.connector.connect(
+        host='localhost',
+        database='parklot',
+        user='root',
+        password='Sairam@3886'
+    )
+    if connection.is_connected():
+        print('Connected to MySQL database')
+
+except Error as e:
+    print(f'Error while connecting to MySQL: {e}')
+
+# Create a cursor object to execute SQL queries
+cursor = connection.cursor()
+
+# Create the main window
+root = tk.Tk()
+root.title("Parking Lot Management System")
+
+# Create a function to add the details of the order and insert the data into the database
+def parkingdetails_form():
+    id = id_entry.get()
+    name = name_entry.get()
+    location = location_entry.get()
+    capacity = capacity_entry.get()
+    available_spots = available_spots_entry.get()
+    license_plate = license_plate_entry.get()
+    entry_time = entry_time_entry.get()
+    exit_time = exit_time_entry.get()
+    fee = fee_entry.get()
+    lot_id = lot_id_entry.get()
+
+    insert_query = '''
+    INSERT INTO park_lot (id, name, location, capacity, available_spots)
+    VALUES (%s, %s, %s, %s, %s)
+    '''
+    cursor.execute(insert_query, (id, name, location, capacity, available_spots))
+
+    insert_query = '''
+    INSERT INTO park_ticket (id, license_plate, entry_time, exit_time, fee, lot_id)
+    VALUES (%s, %s, %s, %s, %s, %s)
+    '''
+    cursor.execute(insert_query, (id, license_plate, entry_time, exit_time, fee, lot_id))
+
+    connection.commit()
+    print('Parking details added successfully')
+
+# Create a function to retrieve all order details from the database and display them in a table
+def view_park_lot():
+    select_query = 'SELECT * FROM park_lot'
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+
+    # Create a new window to display the order details
+    view_window = tk.Toplevel(root)
+    view_window.title("View parking details")
+
+    # Create a table to display the order details
+    table = tk.Label(view_window, text="id\tname\tlocation\tcapacity\tavailable_spots")
+    table.grid(row=0, column=0, padx=10, pady=10)
+
+    for i, row in enumerate(result):
+        for j, value in enumerate(row):
+            cell = tk.Label(view_window, text=value)
+            cell.grid(row=i+1, column=j, padx=10, pady=10)
+
+# Create a function to retrieve all order items from the database and display them in a table
+def view_park_ticket():
+    select_query = 'SELECT * FROM park_ticket'
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+    print(result)
+
+    # Create a new window to display the order_items
+    view_window = tk.Toplevel(root)
+    view_window.title("View parking_ticket")
+
+    # Create a table to display the order_items
+    table = tk.Label(view_window, text="id\tlicense_plate\tentry_time\texit_time\tfee\tlot_id")
+    table.grid(row=0, column=0, padx=5, pady=10)
+
+    for i, row in enumerate(result):
+        for j, value in enumerate(row):
+            cell = tk.Label(view_window, text=value)
+            cell.grid(row=i+1, column=j, padx=5, pady=10)
+
+# Create a function to delete a order from the database
+def delete_park_ticket():
+    # Retrieve the ID of the order details to be deleted from the user
+    id = delete_entry.get()
+
+    # Use a DELETE SQL query to remove the order details from the database
+    delete_query = "DELETE FROM park_ticket WHERE id = %s"
+    cursor.execute(delete_query, (id,))
+    connection.commit()
+
+    # Display a message to the user indicating that the order details has been deleted
+    print(f"order with ID {id} has been deleted.")
+
+# Create the labels and entry fields for the user to input data
+id_label = tk.Label(root, text="id:")
+id_label.grid(row=0, column=0)
+id_entry = tk.Entry(root)
+id_entry.grid(row=0, column=1)
+
+id_label = tk.Label(root, text="id:")
+id_label.grid(row=0, column=3)
+id_entry = tk.Entry(root)
+id_entry.grid(row=0, column=4)
+
+name_label = tk.Label(root, text="name:")
+name_label.grid(row=1, column=0)
+name_entry = tk.Entry(root)
+name_entry.grid(row=1, column=1)
+
+license_plate_label = tk.Label(root, text="license_plate:")
+license_plate_label.grid(row=1, column=3)
+license_plate_entry = tk.Entry(root)
+license_plate_entry.grid(row=1, column=4)
+
+location_label = tk.Label(root, text="location:")
+location_label.grid(row=2, column=0)
+location_entry = tk.Entry(root)
+location_entry.grid(row=2, column=1)
+
+entry_time_label = tk.Label(root, text="entry_time:")
+entry_time_label.grid(row=2, column=3)
+entry_time_entry = tk.Entry(root)
+entry_time_entry.grid(row=2, column=4)
+
+capacity_label = tk.Label(root, text="capacity:")
+capacity_label.grid(row=3, column=0)
+capacity_entry = tk.Entry(root)
+capacity_entry.grid(row=3, column=1)
+
+exit_time_label = tk.Label(root, text="exit_time:")
+exit_time_label.grid(row=3, column=3)
+exit_time_entry = tk.Entry(root)
+exit_time_entry.grid(row=3, column=4)
+
+available_spots_label = tk.Label(root, text="available_spots:")
+available_spots_label.grid(row=4, column=0)
+available_spots_entry = tk.Entry(root)
+available_spots_entry.grid(row=4, column=1)
+
+fee_label = tk.Label(root, text="fee:")
+fee_label.grid(row=4, column=3)
+fee_entry = tk.Entry(root)
+fee_entry.grid(row=4, column=4)
+
+lot_id_label = tk.Label(root, text="lot_id:")
+lot_id_label.grid(row=5, column=3)
+lot_id_entry = tk.Entry(root)
+lot_id_entry.grid(row=5, column=4)
+
+
+
+
+# Create a button to submit the form
+submit_button = tk.Button(root, text="Add parking details", command=parkingdetails_form)
+submit_button.grid(row=7, column=1)
+
+# Create a button to view the order details
+view_button = tk.Button(root, text="View parking lot details", command=view_park_lot)
+view_button.grid(row=8, column=1)
+
+# Create a button to view the order_items
+view_button = tk.Button(root, text="View parking ticket details", command=view_park_ticket)
+view_button.grid(row=9, column=1)
+
+# Create a label and entry field for the user to input the ID of the order details to be deleted
+delete_label = tk.Label(root, text="Enter ID of parking ticket to delete:")
+delete_label.grid(row=10, column=0)
+delete_entry = tk.Entry(root)
+delete_entry.grid(row=10, column=1)
+
+# Create a button to delete order details
+delete_button = tk.Button(root, text="Delete parking ticket details", command=delete_park_ticket)
+delete_button.grid(row=11, column=1)
+
+# Run the main loop
+root.mainloop()
+
+# Close the cursor and connection
+cursor.close()
+connection.close()
